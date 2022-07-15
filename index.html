@@ -1,0 +1,142 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script language="javascript">
+$(function() {
+    DrawBoard(1, "Lucas", 15, 15);
+    DrawBoard(2, "Mauricio", 15, 15);
+    DrawParts(1, [[0,0,0,0,0,1,0,0,0,0], [0,0,0,0,0,1,0,0,0,0],[0,0,0,2,2,0,0,0,0,0]]);
+    shotIn(1, "J", 10);
+    shotIn(1, "F",  2);
+    shotIn(2, "F",  4);
+});
+
+function DrawBoard(player, name, width, height) {
+    var table = $('<table>');
+    table.addClass('board');
+    var tr = $('<tr>');
+    var td = $('<td>');
+    td.append('&nbsp;');
+    tr.append(td);
+    for (var c = 0; c < height; c++) {
+        var td = $('<td>');
+        td.append(String.fromCharCode(c+65));
+        tr.append(td);
+    }
+    table.append(tr);
+
+    for (var l = 0; l < width; l++) {
+        var tr = $('<tr>');
+        var td = $('<td>');
+        td.append(l+1);
+        tr.append(td);
+        for (var c = 0; c < height; c++) {
+            var td = $('<td>');
+            td.append('&nbsp;');
+            tr.append(td);
+        }
+        table.append(tr);
+    }
+    
+    $('.player'+player+' > .localboard').append(table);
+    $('.player'+player+' > .localname').text(name);
+}
+
+function DrawParts(player, board) {
+    var table = $('.player'+player+' table.board');
+    for (var l = 0; l < board.length; l++) {
+        for (var c = 0; c < board[l].length; c++) {
+            if (board[l][c] > 0) {
+                table.find('tr:nth-child('+(l+2)+')').find('td:nth-child('+(c+2)+')').addClass('part');
+            }
+        }
+    }
+}
+
+function shotIn(player, column, line) {
+    var c = column;
+    if (isNaN(column)) {
+        c = column.charCodeAt(0)-64;
+    }
+    var table = $('.player'+player+' table.board');
+    table.find('tr:nth-child('+(line+1)+')').find('td:nth-child('+(c+1)+')').addClass('shot').text('X');
+}
+</script>
+<style>
+body {
+    font-family: Tahoma, Arial;
+}
+.board {
+    border: 1px solid #ccc;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-size: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.board tr > td {
+    width: 22px;
+    height: 22px;
+    border: 1px solid #ccc;
+    margin: 0;
+    padding: 0;
+}
+.board tr:not(:nth-child(1)) > td:not(:nth-child(1)) {
+    background-color: #cff;
+}
+.board tr:not(:nth-child(1)) > td.shot:not(.part):not(:nth-child(1)) {
+    background-color: #4ff !important;
+}
+.board tr > td.part:not(.shot) {
+    background-color: #cfc;
+}
+.board tr > td.part.shot {
+    background-color: #f88 !important;
+}
+.board tr:nth-child(1) > td {
+    text-align: center;
+}
+.board tr > td {
+    text-align: center;
+}
+.board tr > td:nth-child(1) {
+    text-align: right;
+    padding-right: 5px;
+}
+.navalPlayers {
+    width:100%;
+    height:100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.navalPlayers > tbody > tr > td {
+    width:50%;
+}
+.navalPlayers .localname {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+    font-weight: bolder;
+    display: block;
+}
+</style>
+</head>
+<body>
+<table class="navalPlayers">
+    <tbody>
+        <tr>
+            <td class="player1">
+                <span class="localname"></span>
+                <div class="localboard"></div>
+            </td>
+            <td class="player2">
+                <span class="localname"></span>
+                <div class="localboard"></div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>
